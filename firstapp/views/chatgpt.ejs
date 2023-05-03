@@ -1,0 +1,15 @@
+
+<h1> Hello <%= user.username %>! </h1>
+<h4> Welcome to this ChatGPT access portal. </h4>
+
+<div class="row">
+    <!-- Have a text prompt for the user to ask chatGPT their question -->
+    <div class="col">
+        <p> Ask ChatGPT a question! </p>
+        <form method="post" action="chatgpt">
+            <!-- Have the text box for input be larger than a standard input form -->
+            <textarea name="question" rows="5" cols="80"></textarea>
+            <br>
+            <input type="submit" value="Ask ChatGPT">
+        </form>
+</div>
