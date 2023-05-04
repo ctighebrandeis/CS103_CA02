@@ -10,6 +10,16 @@
             <!-- Have the text box for input be larger than a standard input form -->
             <textarea name="question" rows="5" cols="80"></textarea>
             <br>
-            <input type="submit" value="Ask ChatGPT">
+            <input class="btn btn-lg btn-primary" type="submit" value="Ask ChatGPT">
         </form>
+    </div>
+    <!-- Have a text box for the response from chatGPT -->
+    <div class="col">
+        <p> ChatGPT's response: </p>
+        <textarea name="response" rows="5" cols="80" readonly>
+            <%= response %>
+        </textarea>
+        <br>
+        <!-- Have a button to look at the history of prompts/responses at /chatgpt/history -->
+        <a class="btn btn-lg btn-primary" href="/chatgpt/history">View History</a>
 </div>
