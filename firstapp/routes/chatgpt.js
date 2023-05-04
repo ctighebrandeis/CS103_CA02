@@ -31,8 +31,14 @@ router.get('/chatgpt/',
     async (req, res, next) => {
         // Find the most recent response from the current user and store it in res.locals.response
         res.locals.response = await GPTResponse.findOne({userId: req.user._id}).sort({time_made: -1});
-        // console.log(res.locals.response.response);
-        res.locals.response = res.locals.response.response.trim();
+        console.log(res.locals.response);
+        
+        // If there is no response, set res.locals.response to an empty string
+        if (res.locals.response == null) {
+            res.locals.response = "";
+        } else {
+            res.locals.response = res.locals.response.response.trim();
+        }
         if (!resp_generated) { 
             res.locals.response = "";
         }
@@ -46,13 +52,17 @@ router.post('/chatgpt',
     isLoggedIn,
     async (req, res, next) => {
 
-        const prompt = req.body.prompt;
-        // Make the openai completion prompt to ada (for now, will change later)
+        let prompt = req.body.question;
+
+        // Extend the prompt to ask about the proof
+        prompt = "Please explain the following mathematical proof or theorem in plain English:\n" + prompt + "\n\nGive a brief example of how this proof or theorem is used:\n";
+
+        // Make the openai completion prompt to curie
         const completion = await openai.createCompletion({
-            model: 'text-ada-001',
+            model: 'text-curie-001',
             prompt: prompt,
-            max_tokens: 150,
-            temperature: 0.9,
+            max_tokens: 1500,
+            temperature: 0.8,
         });
 
         const response = completion.data.choices[0].text;
@@ -69,6 +79,22 @@ router.post('/chatgpt',
         await gptResponse.save();
         res.locals.response = response;
         res.redirect('/chatgpt')
+    });
+
+router.get('/chatgpt/history',
+    isLoggedIn,
+    async (req, res, next) => {
+        // Find all responses from the current user and store it in res.locals.responses
+        res.locals.responses = await GPTResponse.find({userId: req.user._id}).sort({time_made: -1});
+        res.render('chatgpt_history');
+    });
+
+router.get('/chatgpt/delete/:id',
+    isLoggedIn,
+    async (req, res, next) => {
+        // Find the response with the given id and delete it
+        await GPTResponse.deleteOne({_id: req.params.id});
+        res.redirect('/chatgpt/history');
     });
 
 module.exports = router;

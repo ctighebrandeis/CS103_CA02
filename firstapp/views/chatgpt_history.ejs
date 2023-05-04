@@ -1,0 +1,27 @@
+<!-- List all of the entires in res.locals.responses, with
+    a delete button associated with each one; deleting goes to /chatgpt/delete/:itemId -->
+
+<h1>ChatGPT History</h1>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Prompt</th>
+            <th>Response</th>
+            <th>Timestamp</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Javascript to loop through responses -->
+        <% for (const item of responses) { %>
+            <tr>
+                <td><%= item.prompt %></td>
+                <td><%= item.response %></td>
+                <td>
+                    <a href="/chatgpt/delete/<%=item._id %>">
+                        <i class="bi bi-trash"></i>
+                      </a>
+                </td>
+            </tr>
+        <% } %>
+    </tbody>
+</div>
